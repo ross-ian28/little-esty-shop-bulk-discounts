@@ -33,7 +33,6 @@ RSpec.describe 'Merchant items index' do
   describe 'Displays' do
     it 'lists names of all merchant items' do
 
-#      save_and_open_page
       expect(page).to have_current_path("/merchants/#{@starw.id}/items")
       expect(page).to have_content(@starw.name)
       expect(page).to_not have_content(@start.name)
@@ -64,7 +63,7 @@ RSpec.describe 'Merchant items index' do
 
     end
 
-    it 'lists the names of the top 5 most popular items ranked by total revenue' do
+    xit 'lists the names of the top 5 most popular items ranked by total revenue' do
 
         expect(page).to have_content("Top Items")
 
