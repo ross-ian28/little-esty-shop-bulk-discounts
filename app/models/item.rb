@@ -29,7 +29,7 @@ class Item < ApplicationRecord
       end
     end
     max.sort!{ |a,b| a.keys.first <=> b.keys.first }
-    max.last.keys.first
+    Time.parse(max.last.keys.first).strftime("%Y.%m.%d")
   end
 
 end
