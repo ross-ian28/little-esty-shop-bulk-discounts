@@ -15,6 +15,7 @@ RSpec.describe 'discount index' do
   describe 'shows all bulk_discounts' do
     it 'lists all discount attributes' do
       expect(page).to have_content("Bulk Discounts")
+      expect(page).to have_content("All discounts")
       within("#discounts") do
         expect(page).to have_content(@discount1.percentage_discount)
         expect(page).to have_content(@discount1.quantity_threshold)
@@ -27,8 +28,13 @@ RSpec.describe 'discount index' do
     it 'has link to show pages' do
       within("#discounts") do
         click_link "#{@discount1.percentage_discount}% off #{@discount1.quantity_threshold} items"
-
         expect(current_path).to eq(merchant_discount_path(@merchant1, @discount1))
+      end
+    end
+    it 'has link to new page' do
+      within("#links") do
+        click_link "Create new discount"
+        expect(current_path).to eq(new_merchant_discount_path(@merchant1))
       end
     end
   end
