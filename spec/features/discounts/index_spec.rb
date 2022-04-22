@@ -39,7 +39,7 @@ RSpec.describe 'discount index' do
     end
     it 'has link to delete discount' do
       within("#discounts") do
-        click_link "Delete discount #{@discount1.id}"
+        click_button "Delete discount #{@discount1.id}"
 
         expect(current_path).to eq(merchant_discounts_path(@merchant1))
 
