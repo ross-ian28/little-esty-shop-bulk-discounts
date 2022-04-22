@@ -6,6 +6,9 @@
 <h3>All discounts</h3>
 <div id="discounts">
   <% @discounts.each do |discount| %>
-    <p><%= link_to "#{discount.percentage_discount}% off #{discount.quantity_threshold} items", merchant_discount_path(discount.merchant, discount) %></p>
+    <tr>
+      <td><strong><%= link_to "#{discount.percentage_discount}% off #{discount.quantity_threshold} items", merchant_discount_path(discount.merchant, discount) %></strong>
+      <%= button_to "Delete discount #{discount.id}", merchant_discount_path(discount.merchant, discount), method: :delete %></td><br>
+    </tr>
   <% end %>
 </div>
