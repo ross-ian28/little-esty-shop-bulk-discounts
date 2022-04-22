@@ -127,4 +127,11 @@ RSpec.describe 'merchant dashboard' do
       expect(page).to_not have_content(@customer5.first_name)
     end
   end
+
+  it 'has a link to view discounts' do
+    within("#index-buttons") do
+      click_button "All Bulk Discounts"
+      expect(current_path).to eq(merchant_discounts_path(@merchant1))
+    end
+  end
 end
