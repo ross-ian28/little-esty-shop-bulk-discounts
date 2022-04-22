@@ -1,4 +1,9 @@
 <h1>Bulk Discounts</h1>
+<div id="links">
+  <p><%= link_to "Create new discount", new_merchant_discount_path(@merchant) %></p>
+</div>
+<hr>
+<h3>All discounts</h3>
 <div id="discounts">
   <% @discounts.each do |discount| %>
     <p><%= link_to "#{discount.percentage_discount}% off #{discount.quantity_threshold} items", merchant_discount_path(discount.merchant, discount) %></p>
