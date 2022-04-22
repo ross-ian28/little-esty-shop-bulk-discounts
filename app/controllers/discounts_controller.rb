@@ -4,6 +4,6 @@ class DiscountsController < ApplicationController
   end
 
   def show
-
+    @discount = Discount.find(params[:id])
   end
 end
