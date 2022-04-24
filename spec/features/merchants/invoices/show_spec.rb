@@ -22,6 +22,8 @@ RSpec.describe 'merchant dashboard' do
     @ii3 = InvoiceItem.create!(invoice_id: @invoice2.id, item_id: @item1.id, status: 1, quantity: 30, unit_price: 10)
     @ii4 = InvoiceItem.create!(invoice_id: @invoice3.id, item_id: @item3.id, status: 2, quantity: 3, unit_price: 100)
 
+    @discount1 = @merchant1.discounts.create!(percentage_discount: 50, quantity_threshold: 25)
+
     visit merchant_invoice_path(@merchant1, @invoice1)
   end
 
@@ -72,9 +74,16 @@ RSpec.describe 'merchant dashboard' do
   end
 
   it 'shows total revenue generated' do
-    expect(page).to have_content("Total revenue generated:")
     within("#invoice") do
+      expect(page).to have_content("Total revenue generated:")
       expect(page).to have_content("$2.00")
+    end
+  end
+
+  it 'shows total revenue generated' do
+    within("#invoice") do
+      expect(page).to have_content("Total revenue generated with discount:")
+      expect(page).to have_content("$1.10")
     end
   end
 end

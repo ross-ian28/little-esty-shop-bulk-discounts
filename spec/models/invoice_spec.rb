@@ -23,9 +23,14 @@ RSpec.describe Invoice, type: :model do
 
       @ii1 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item1.id, status: 1, quantity: 20, unit_price: 10)
       @ii2 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item2.id, status: 1, quantity: 5, unit_price: 12)
+
+      @discount1 = @merchant1.discounts.create!(percentage_discount: 50, quantity_threshold: 10)
     end
     it "returns total revenue from all items in invoice" do
       expect(@invoice1.total_rev).to eq(260)
+    end
+    it "returns total revenue from all items in invoice" do
+      expect(@invoice1.discount_rev(@merchant1)).to eq(160)
     end
   end
 end
