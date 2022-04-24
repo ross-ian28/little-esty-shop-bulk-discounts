@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'discount index' do
+RSpec.describe 'discount show' do
   before :each do
     @merchant1 = Merchant.create!(name: "Pabu")
     @merchant2 = Merchant.create!(name: "Loki")
@@ -22,6 +22,12 @@ RSpec.describe 'discount index' do
         expect(page).to have_content(@discount1.quantity_threshold)
         expect(page).to_not have_content(@discount2.percentage_discount)
         expect(page).to_not have_content(@discount2.quantity_threshold)
+      end
+    end
+    it 'has link to edit page' do
+      within("#discount") do
+        click_link "Edit discount"
+        expect(current_path).to eq(edit_merchant_discount_path(@merchant1, @discount1))
       end
     end
   end

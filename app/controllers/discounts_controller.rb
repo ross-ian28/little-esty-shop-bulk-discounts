@@ -1,7 +1,7 @@
 class DiscountsController < ApplicationController
   def index
-    @discounts = Discount.all
     @merchant = Merchant.find(params[:merchant_id])
+    @discounts = @merchant.discounts
   end
 
   def show
@@ -16,13 +16,30 @@ class DiscountsController < ApplicationController
     @merchant = Merchant.find(params[:merchant_id])
     discount = @merchant.discounts.new(discount_params)
 
-    if discount.save
-      redirect_to merchant_discounts_path(@merchant)
-      flash.notice = "Succesfully Created Discount"
-    else
-      redirect_to new_merchant_discount_path(@merchant)
-      flash.notice = "All fields must be completed"
-    end
+    discount.save
+    redirect_to merchant_discounts_path(@merchant)
+  end
+
+  def edit
+    @discount = Discount.find(params[:id])
+  end
+
+  def update
+    discount = Discount.find(params[:id])
+
+    discount.update(discount_params)
+    redirect_to merchant_discount_path(discount.merchant, discount)
+  end
+
+  def edit
+    @discount = Discount.find(params[:id])
+  end
+
+  def update
+    discount = Discount.find(params[:id])
+
+    discount.update(discount_params)
+    redirect_to merchant_discount_path(discount.merchant, discount)
   end
 
   def destroy

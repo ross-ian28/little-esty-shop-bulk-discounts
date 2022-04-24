@@ -6,7 +6,7 @@ RSpec.describe 'discount index' do
     @merchant2 = Merchant.create!(name: "Loki")
 
     @discount1 = @merchant1.discounts.create!(percentage_discount: 20, quantity_threshold: 10)
-    @discount2 = @merchant1.discounts.create!(percentage_discount: 20, quantity_threshold: 5)
+    @discount2 = @merchant1.discounts.create!(percentage_discount: 30, quantity_threshold: 5)
     @discount3 = @merchant2.discounts.create!(percentage_discount: 50, quantity_threshold: 8)
 
     visit merchant_discounts_path(@merchant1)
@@ -21,8 +21,8 @@ RSpec.describe 'discount index' do
         expect(page).to have_content(@discount1.quantity_threshold)
         expect(page).to have_content(@discount2.percentage_discount)
         expect(page).to have_content(@discount2.quantity_threshold)
-        expect(page).to have_content(@discount3.percentage_discount)
-        expect(page).to have_content(@discount3.quantity_threshold)
+        expect(page).to_not have_content(@discount3.percentage_discount)
+        expect(page).to_not have_content(@discount3.quantity_threshold)
       end
     end
     it 'has link to show pages' do
@@ -39,7 +39,7 @@ RSpec.describe 'discount index' do
     end
     it 'has link to delete discount' do
       within("#discounts") do
-        click_link "Delete discount #{@discount1.id}"
+        click_button "Delete discount #{@discount1.id}"
 
         expect(current_path).to eq(merchant_discounts_path(@merchant1))
 
