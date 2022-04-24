@@ -23,4 +23,16 @@ class Invoice < ApplicationRecord
   def total_rev
     invoice_items.sum("quantity * unit_price")
   end
+
+  def discount_rev(merchant)
+    discount = merchant.invoice_items
+    .joins(:discounts)
+    .where("invoice_items.quantity >= discounts.quantity_threshold")
+    .select("invoice_items.*, (sum(invoice_items.quantity * invoice_items.unit_price)) * (discounts.percentage_discount / 100.0) AS rev")
+    .group("invoice_items.id")
+    .group("discounts.id")
+    .sum(&:rev)
+
+    total_rev - discount 
+  end
 end
