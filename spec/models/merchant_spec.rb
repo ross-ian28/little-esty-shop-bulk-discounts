@@ -6,7 +6,6 @@ RSpec.describe Merchant, type: :model do
   end
   describe "relationships" do
      it { should have_many :items }
-     it { should have_many :discounts }
   end
 
   describe 'instance methods' do
@@ -78,7 +77,7 @@ RSpec.describe Merchant, type: :model do
 
         @customer1 = Customer.create!(first_name: "Customer", last_name: "One")
 
-        @invoice1 = @customer1.invoices.create!(status: 2)
+        @invoice1 = @customer1.invoices.create!(status: 1)
         @invoice2 = @customer1.invoices.create!(status: 2)
         @invoice3 = @customer1.invoices.create!(status: 2)
         @invoice4 = @customer1.invoices.create!(status: 2)
@@ -103,6 +102,16 @@ RSpec.describe Merchant, type: :model do
       end
       it '#top_5_merchants returns based on total rev' do
         expect(Merchant.top_5_merchants).to eq([@merchant2, @merchant4, @merchant3, @merchant1, @merchant6])
+      end
+
+      it '#total_rev' do
+        expect(@merchant1.total_rev).to eq(1000)
+      end
+
+      it '#best_date_formatted' do
+        expect(@merchant2.best_date_formatted).to eq("No sales data")
+        day = @merchant1.created_at.strftime("%A, %B %d %Y")
+        expect(@merchant1.best_date_formatted).to eq(day)
       end
     end
   end
