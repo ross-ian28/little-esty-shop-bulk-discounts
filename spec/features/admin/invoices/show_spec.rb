@@ -34,7 +34,7 @@ RSpec.describe 'Admin invoice show page' do
 
     @invoice2 = @customer1.invoices.create!(status: 1)
 
-    @invoiceitem1 = InvoiceItem.create(quantity: 1, unit_price: 100, item_id: @item1.id, invoice_id: @invoice1.id, status: 0)
+    @invoiceitem1 = InvoiceItem.create(quantity: 10, unit_price: 100, item_id: @item1.id, invoice_id: @invoice1.id, status: 0)
     @invoiceitem2 = InvoiceItem.create(quantity: 1, unit_price: 100, item_id: @item2.id, invoice_id: @invoice1.id, status: 1)
     @invoiceitem3 = InvoiceItem.create(quantity: 1, unit_price: 100, item_id: @item3.id, invoice_id: @invoice2.id, status: 0)
 
@@ -68,7 +68,7 @@ RSpec.describe 'Admin invoice show page' do
     @invoiceitem2.update(quantity: 3)
     visit "/admin/invoices/#{@invoice1.id}"
 
-    expect(page).to have_content("Total revenue generated: $4.00")
+    expect(page).to have_content("Total revenue generated: $13.00")
   end
 
   it 'shows the invoice status as a select field that is editable, with a submit button' do
@@ -90,5 +90,4 @@ RSpec.describe 'Admin invoice show page' do
 
     expect(expected).to eq("cancelled")
   end
-
 end
