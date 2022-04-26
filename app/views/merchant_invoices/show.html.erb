@@ -24,7 +24,10 @@
         <%= form.select :status, ['packaged', 'pending', 'shipped'] %><br>
 
         <%= form.submit "Update Item Status" , selected: invoice_item.status %>
-        <% end %></td>
+        <% end %></td><br>
+        <% if invoice_item.applied_discount %>
+          <td><strong>Discount: </strong><%= button_to "Item discount", "/merchants/#{@merchant.id}/discounts/#{invoice_item.applied_discount.id}", method: :get %></td><br>
+        <% end %>
       </tr>
     </div>
   <% end %>
