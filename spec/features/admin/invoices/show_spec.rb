@@ -2,41 +2,19 @@ require 'rails_helper'
 
 RSpec.describe 'Admin invoice show page' do
   before :each do
+    @merchant1 = Merchant.create!(name: "Pabu")
 
-    @starw = Merchant.create!(name: "Star Wars R Us ")
-    @start = Merchant.create!(name: "Star Trek R Us ")
-
-    @item1 = @starw.items.create!(name:	"X-wing",
-                          description: "X-wing ship",
-                          unit_price:75107,
-                          status: 1
-                         )
-
-    @item2 = @starw.items.create!(name:	"Tie-fighter",
-                          description: "Tie-fighter ship",
-                          unit_price:75000,
-                          status: 0
-                         )
-    @item3 = @starw.items.create!(name:	"Lightsaber",
-                          description: "Lightsaber",
-                          unit_price:7500,
-                          status: 1
-                         )
-
-    @item4 = @starw.items.create!(name:	"Luke",
-                          description: "Luke SKywalker figure",
-                          unit_price:1000
-                         )
+    @item1 = @merchant1.items.create!(name: "Brush", description: "Brushy", unit_price: 500)
+    @item2 = @merchant1.items.create!(name: "Peanut Butter", description: "Yummy", unit_price: 300)
 
     @customer1 = Customer.create!(first_name: "Loki", last_name: "R")
 
-    @invoice1 = @customer1.invoices.create!(status: 0)
+    @invoice1 = @customer1.invoices.create!(status: "completed")
 
-    @invoice2 = @customer1.invoices.create!(status: 1)
+    @ii1 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item1.id, status: 0, quantity: 10, unit_price: 500)
+    @ii2 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item2.id, status: 0, quantity: 5, unit_price: 300)
 
-    @invoiceitem1 = InvoiceItem.create(quantity: 10, unit_price: 100, item_id: @item1.id, invoice_id: @invoice1.id, status: 0)
-    @invoiceitem2 = InvoiceItem.create(quantity: 1, unit_price: 100, item_id: @item2.id, invoice_id: @invoice1.id, status: 1)
-    @invoiceitem3 = InvoiceItem.create(quantity: 1, unit_price: 100, item_id: @item3.id, invoice_id: @invoice2.id, status: 0)
+    @discount1 = @merchant1.discounts.create!(percentage_discount: 20, quantity_threshold: 10)
 
     visit "/admin/invoices/#{@invoice1.id}"
   end
@@ -56,38 +34,30 @@ RSpec.describe 'Admin invoice show page' do
   end
 
   it 'shows all item attributes on the invoice' do
-    within("#invoice_item-#{@invoiceitem1.id}") do
-      expect(page).to have_content(@invoiceitem1.item.name)
-      expect(page).to have_content(@invoiceitem1.quantity)
-      expect(page).to have_content("Sale price: $1.00")
-      expect(page).to have_content(@invoiceitem1.status)
+    within("#invoice_item-#{@ii1.id}") do
+      expect(page).to have_content(@ii1.item.name)
+      expect(page).to have_content(@ii1.quantity)
+      expect(page).to have_content("Sale price: $5.00")
+      expect(page).to have_content(@ii1.status)
     end
   end
 
   it 'shows total revenue for the invoice' do
-    @invoiceitem2.update(quantity: 3)
     visit "/admin/invoices/#{@invoice1.id}"
 
-    expect(page).to have_content("Total revenue generated: $13.00")
+    expect(page).to have_content("Total revenue generated:")
+    expect(page).to have_content("$65.00")
   end
 
   it 'shows the invoice status as a select field that is editable, with a submit button' do
     expected = find_field(:update_status).value
 
-    expect(expected).to eq("in progress")
-
-    visit "/admin/invoices/#{@invoice2.id}"
-
-    expected = find_field(:update_status).value
-
     expect(expected).to eq("completed")
+  end
 
-    select "cancelled", from: :update_status
-
-    click_on "Update Invoice Status"
-
-    expected = find_field(:update_status).value
-
-    expect(expected).to eq("cancelled")
+  it 'shows discount total revenue for the invoice' do
+    save_and_open_page
+    expect(page).to have_content("Total revenue generated with discount:")
+    expect(page).to have_content("$55.0")
   end
 end
