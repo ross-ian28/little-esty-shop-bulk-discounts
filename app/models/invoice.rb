@@ -33,6 +33,17 @@ class Invoice < ApplicationRecord
     .group("discounts.id")
     .sum(&:rev)
 
-    total_rev - discount 
+    total_rev - discount
+  end
+
+  def total_discount_rev
+    discount = invoice_items.joins(:discounts)
+    .where("invoice_items.quantity >= discounts.quantity_threshold")
+    .select("invoice_items.*, (sum(invoice_items.quantity * invoice_items.unit_price)) * (discounts.percentage_discount / 100.0) AS rev")
+    .group("invoice_items.id")
+    .group("discounts.id")
+    .sum(&:rev)
+
+    total_rev - discount
   end
 end
